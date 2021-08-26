@@ -1,59 +1,45 @@
-import React from 'react'
-import { IoLocationOutline, IoCallOutline, IoMailOutline  } from "react-icons/io5"
+import React, { useState } from 'react' 
+import emailjs from 'emailjs-com'
 
-const ContactForm = () => {
+// import './ContactUs.css'
+
+const Result = () => {
     return (
-        <section>
-            <div className="container">
-                <div className="contactInfo">
-                    <div>
-                        <h3>contact info</h3>
-                        <ul className="info">
-                            <li>
-                                <span><IoLocationOutline className="icon" /></span>
-                                <span>69 Rockhampton straya</span>
-                            </li>
-                            <li>
-                                <span><IoCallOutline className="icon" /></span>
-                                <span>+123 456 789</span>
-                            </li>
-                            <li>
-                                <span><IoMailOutline className="icon" /></span>
-                                <span>getme91thieving@htfu.com</span>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div className="contactForm">
-                    <h3>Send a message</h3>
-                    <div className="formBox">
-                        <div className="inputBox w50">
-                            <input type="text" name="message" placeholder="First Name" required />
-                                <span>First Name</span>
-                        </div>
-                        <div className="inputBox w50">
-                            <input type="text" name="message" placeholder="Last Name"/>
-                                <span>Last Name</span>
-                        </div>
-                        <div className="inputBox w50">
-                            <input type="text" name="message" placeholder="Email Address" />
-                                <span>Email</span>
-                        </div>
-                        <div className="inputBox w50">
-                            <input type="text" name="message" placeholder="Phone Number"required />
-                                <span>Phone Number</span>
-                        </div>
-                        <div className="inputBox w150">
-                            <input type="text" name="message" placeholder="Tell us how we can help"required />
-                            {/* // add submit function */}
-                                <button>submit</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    )
+        <p>Your message has been successfully sent! We will contact you as soon as possible.</p>
+    ) 
 }
 
-export default ContactForm
+export default function ContactUs() {
+
+    const [result, showResult] = useState(false)
+  function sendEmail(e) {
+    e.preventDefault();
+
+    emailjs.sendForm('service_tmrrmg3', 'template_vxv1034', e.target, 'user_9MXq73rfVJ5rPKqrhojHx')
+      .then((result) => {
+          console.log(result.text);
+      }, (error) => {
+          console.log(error.text);
+      })
+      e.target.reset()
+      showResult(true)
+  }
+
+  return (
+    <form className="contactForm" onSubmit={sendEmail}>
+
+      <label>Name</label>
+      <input type="text" name="name" />
+      <label>Mobile Number</label>
+      <input type="text" name="mobile_number" />
+      <label>Email</label>
+      <input type="email" name="email" />
+      <label>Message</label>
+      <textarea name="message" />
+      <button type="submit">Send</button>
+
+      <div className="row">{result ? <Result /> : null}</div>
+    </form>
+  )
+}
 
